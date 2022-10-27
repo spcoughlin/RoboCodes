@@ -61,7 +61,7 @@ while True:
         cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
 
     if len(cats) >= 2:
-        frame.save("frame.png")
+        frame.imwrite("frame.png")
         code = int(interperetCode(), 2)
         cv2.destroyAllWindows()
 
