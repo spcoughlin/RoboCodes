@@ -23,8 +23,6 @@ def interperet_code(c1, c2, gray):
             bin_str += "1"
         else:
             bin_str += "0"
-        x_val = 0
-        y = 0
 
     for i in row2:
         x_val = c1[0] + int(i)
@@ -33,8 +31,6 @@ def interperet_code(c1, c2, gray):
             bin_str += "1"
         else:
             bin_str += "0"
-        x_val = 0
-        y = 0
 
     return bin_str
 
