@@ -1,4 +1,3 @@
-from string import whitespace
 from PIL import Image, ImageDraw, ImageWin
 import os
 import shutil
