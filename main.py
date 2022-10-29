@@ -6,10 +6,10 @@ import datetime
 catCascade = cv2.CascadeClassifier('cascade.xml')
 
 def interperet_code(c1, c2, gray):
-    '''
+    """
     Calculates the positions of all cells
     Scans cells and generates a string of the binary number
-    '''
+    """
     x_diff = abs(c2[0] - c1[0])
 
     row1 = [x_diff * 0.25, x_diff * 0.5, x_diff * 0.75, x_diff]
@@ -23,8 +23,6 @@ def interperet_code(c1, c2, gray):
             bin_str += "1"
         else:
             bin_str += "0"
-        x_val = 0
-        y = 0
 
     for i in row2:
         x_val = c1[0] + int(i)
@@ -33,18 +31,16 @@ def interperet_code(c1, c2, gray):
             bin_str += "1"
         else:
             bin_str += "0"
-        x_val = 0
-        y = 0
 
     return bin_str
 
 
 def code_scanner():
-    '''
+    """
     Scans video feed for cat matches
     Gets positions of the centers of cats if 2 are detected
     Calls interperet_code
-    '''
+    """
     print("Video Starting...")
     video_capture = cv2.VideoCapture(0)
     print("Awaiting Code...")
