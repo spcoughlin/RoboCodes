@@ -1,2 +1,0 @@
-Line 1: Name
-Line 2: Hours
