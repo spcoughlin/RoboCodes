@@ -45,7 +45,9 @@ def code_scanner():
     Gets positions of the centers of cats if 2 are detected
     Calls interperet_code
     '''
+    print("Video Starting...")
     video_capture = cv2.VideoCapture(0)
+    print("Awaiting Code...")
 
     while True:
         ret, frame = video_capture.read()
@@ -91,12 +93,14 @@ def code_scanner():
 
 def main():
     code = code_scanner()
-    print(code)
+    print(f'Code Found: {code}')
+
     with open(f'HoursFiles/hoursfile{code}.txt', 'r') as f:
         lines = f.readlines()
+        f.close()
 
     if lines[0] != "None\n":
-        clin = input(f"{lines[0]}What would you like to do?\n1 - Clock In\n2 - Clock Out\n3 - Check Hours\n")
+        clin = input(f"Welcome, {lines[0]}What would you like to do?\n1 - Clock In\n2 - Clock Out\n3 - Check Hours\n")
 
         try:
             clin = int(clin)
@@ -105,16 +109,18 @@ def main():
 
         if clin == 1:
             now = datetime.datetime.now().isoformat()
-            with open('clockinlog.txt', 'w') as f:
-                f.write(f"{str(code)}${now}")
+
+            with open('clockinlog.txt', 'a') as f:
+                f.write(f"{str(code)}${now}\n")
                 f.close()
+
             with open(f'HoursFiles/hoursfile{code}.txt', 'r') as f:
                 lines = f.readlines()
                 with open(f'HoursFiles/hoursfile{code}.txt', 'w') as f:
                     lines[2] = "1"
                     for i in lines:
                         f.write(i)
-                        f.write("\n")
+                        # f.write("\n")
                     f.close()
                 f.close()
 
@@ -122,29 +128,34 @@ def main():
 
         elif clin == 2:
             now = datetime.datetime.now()
+
             with open('clockinlog.txt', 'r') as f:
                 logs = f.readlines()
                 logs = logs[::-1]
                 f.close()
+
             past = datetime.datetime.now() # failsafe
             with open(f'HoursFiles/hoursfile{code}.txt', 'r') as f:
                 lines = f.readlines()
-                print(lines)
+
                 for i in logs:
                     if int(i.split('$')[0]) == code and lines[2] == "1":
-                        print("match in logs")
-                        past = datetime.datetime.fromisoformat(i.split('$')[1])
+                        isostr = i.split('$')[1]
+                        past = datetime.datetime.fromisoformat(isostr[:len(isostr) - 1])
+                        break
+
                 time_to_add = (now - past).total_seconds()
                 time_to_add = time_to_add / 3600 # converting to hours
-                hours = int(lines[1][:len(lines[1]) - 1])
+                hours = float(lines[1][:len(lines[1]) - 1])
                 hours += time_to_add
-                lines[1] = hours
+                lines[1] = str(hours) + "\n"
+                lines[2] = "0"
+
                 with open(f'HoursFiles/hoursfile{code}.txt', 'w') as f:
-                    for i in lines:
-                        f.write(str(i))
-                        f.write("\n")
+                    f.writelines(lines)
                     f.close()
                 f.close()
+
                 with open(f'HoursFiles/hoursfile{code}.txt', 'r') as f:
                     lines = f.readlines()
                     print(f"Hours: {lines[1]}")
@@ -166,12 +177,11 @@ def main():
             name = input("Enter Your Name: ")
             with open(f'HoursFiles/hoursfile{code}.txt', 'r') as f:
                 lines = f.readlines()
-                lines[0] = name
-                lines[1] = "0"
+                lines[0] = name + "\n"
+                lines[1] = "0" + "\n"
+                lines[2] = "0"
                 with open(f'HoursFiles/hoursfile{code}.txt', 'w') as f:    
-                    for i in lines:
-                        f.write(i)
-                        f.write("\n")
+                    f.writelines(lines)
                     f.close()
                 f.close()
 
