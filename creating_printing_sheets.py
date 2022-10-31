@@ -14,17 +14,13 @@ for i in range(members):
 
 coords = [30, 280, 530, 780]
 border = (5, 5, 5, 5)
-x = 0
-for i in bigarr:
+
+for i, x in zip(bigarr, range(7)):
     canvas = Image.new("RGB", (816, 1054), (255, 255, 255))
-    count = 0
-    for j, coord in zip(i, coords):
+    for j, coord in zip(i[:4], coords):
         code = Image.open(j)
         code = ImageOps.expand(code, border=border, fill=(0, 0, 0, 255))
         canvas.paste(code, (30, coord))
-        count += 1
-        if count == 4:
-            break
     for j, coord in zip(i[4:], coords):
         code = Image.open(j)
         code = ImageOps.expand(code, border=border, fill=(0, 0, 0, 255))
@@ -32,4 +28,3 @@ for i in bigarr:
 
     canvas.save(f"robocodesheet{x}.png")
     shutil.move(f"robocodesheet{x}.png", f"RoboCodeSheets/robocodesheet{x}.png")
-    x += 1
