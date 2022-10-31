@@ -68,17 +68,13 @@ def code_scanner():
             if c1[0] < c2[0]: # making sure c1 is the one on the left
                 pass
             elif c1[0] > c2[0]:
-                temp = c1
-                c1 = c2
-                c2 = temp
+                c1, c2 = c2, c1
 
             video_capture.release()
             cv2.destroyAllWindows()
             return int(interperet_code(c1, c2, gray), 2)
 
         cv2.imshow('Video', frame)
-
-        
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -115,7 +111,6 @@ def main():
                     lines[2] = "1"
                     for i in lines:
                         f.write(i)
-                        # f.write("\n")
                     f.close()
                 f.close()
 
