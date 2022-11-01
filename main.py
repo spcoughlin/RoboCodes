@@ -18,6 +18,7 @@ def interperet_code(c1, c2, gray):
     for i in row1:
         x_val = c1[0] + int(i)
         y = c1[1]
+        cv2.circle(gray, (x_val, y), 5, (255, 0, 0), 5)
         if np.any(gray[y, x_val] < 128):
             bin_str += "1"
         else:
@@ -26,6 +27,7 @@ def interperet_code(c1, c2, gray):
     for i in row2:
         x_val = c1[0] + int(i)
         y = c2[1]
+        cv2.circle(gray, (x_val, y), 5, (255, 0, 0), 5)
         if np.any(gray[y, x_val] < 128):
             bin_str += "1"
         else:
@@ -51,8 +53,8 @@ def code_scanner():
 
         cats = catCascade.detectMultiScale(
             gray,
-            scaleFactor=1.01, # should be 1.01
-            minNeighbors=4, # should be 4
+            scaleFactor=1.015, # should be 1.01
+            minNeighbors=5, # should be 4
         )
 
         for (x, y, w, h) in cats:
@@ -153,7 +155,7 @@ def main():
         elif clin == 3:
             with open(f'HoursFiles/hoursfile{code}.txt', 'r') as f:
                 lines = f.readlines()
-                print(lines[1])
+                print(f"Hours: {lines[1]}")
 
     elif lines[0] == "None\n":
         clin = input(f"Would you like to create a file for code # {code}?\n1 - Yes\n2 - No\n")
