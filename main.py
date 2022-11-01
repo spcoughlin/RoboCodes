@@ -101,7 +101,7 @@ def main():
         f.close()
 
     if lines[0] != "None\n":
-        clin = input(f"Welcome, {lines[0]}What would you like to do?\n1 - Clock In\n2 - Clock Out\n3 - Check Hours\n")
+        clin = input(f"\nWelcome, {lines[0]}What would you like to do?\n1 - Clock In\n2 - Clock Out\n3 - Check Hours\n")
 
         try:
             clin = int(clin)
@@ -124,7 +124,7 @@ def main():
                     f.close()
                 f.close()
 
-            print(f"Clocked in at {now}")
+            print(f"\nClocked in at {now}")
 
         elif clin == 2:
             now = datetime.datetime.now()
@@ -158,15 +158,15 @@ def main():
 
                 with open(f'HoursFiles/hoursfile{code}.txt', 'r') as f:
                     lines = f.readlines()
-                    print(f"Hours: {lines[1]}")
+                    print(f"\nHours: {lines[1]}")
 
         elif clin == 3:
             with open(f'HoursFiles/hoursfile{code}.txt', 'r') as f:
                 lines = f.readlines()
-                print(f"Hours: {lines[1]}")
+                print(f"\nHours: {lines[1]}")
 
     elif lines[0] == "None\n":
-        clin = input(f"Would you like to create a file for code # {code}?\n1 - Yes\n2 - No\n")
+        clin = input(f"\nWould you like to create a file for code # {code}?\n1 - Yes\n2 - No\n")
 
         try:
             clin = int(clin)
@@ -174,7 +174,7 @@ def main():
             print("Input was not an int!")
 
         if clin == 1:
-            name = input("Enter Your Name: ")
+            name = input("\nEnter Your Name: ")
             with open(f'HoursFiles/hoursfile{code}.txt', 'r') as f:
                 lines = f.readlines()
                 lines[0] = name + "\n"
@@ -185,12 +185,12 @@ def main():
                     f.close()
                 f.close()
 
-            print(f"File created - Code:{code} User:{name}")
+            print(f"\nFile created - Code:{code} User:{name}")
 
         elif clin == 2:
             pass
 
-    clin = input("Would you like to run the program again?\n1 - Yes (Suggested)\n2 - No (Quit)\n")
+    clin = input("\nWould you like to run the program again?\n1 - Yes (Suggested)\n2 - No (Quit)\n")
     if clin == "1": main()
     if clin == "2": pass 
 
