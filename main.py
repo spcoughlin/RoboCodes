@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import datetime
+import statistics
 
 catCascade = cv2.CascadeClassifier('cascade.xml')
 
@@ -16,19 +17,17 @@ def interperet_code(c1, c2, gray):
 
     bin_str = ""
     for i in row1:
-        x_val = c1[0] + int(i)
+        x = c1[0] + int(i)
         y = c1[1]
-        cv2.circle(gray, (x_val, y), 5, (255, 0, 0), 5)
-        if np.any(gray[y, x_val] < 128):
+        if np.any(gray[y, x] < 128):
             bin_str += "1"
         else:
             bin_str += "0"
 
     for i in row2:
-        x_val = c1[0] + int(i)
+        x = c1[0] + int(i)
         y = c2[1]
-        cv2.circle(gray, (x_val, y), 5, (255, 0, 0), 5)
-        if np.any(gray[y, x_val] < 128):
+        if np.any(gray[y, x] < 128):
             bin_str += "1"
         else:
             bin_str += "0"
@@ -60,6 +59,8 @@ def code_scanner():
         for (x, y, w, h) in cats:
             cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
 
+        scans_gathered = 0
+        scans = []
         if len(cats) >= 2:
             x, y, w, h = cats[0]
             c1 = [int((2 * x + w)/2), int((2 * y + h)/2)]
@@ -72,9 +73,13 @@ def code_scanner():
             elif c1[0] > c2[0]:
                 c1, c2 = c2, c1
 
-            video_capture.release()
-            cv2.destroyAllWindows()
-            return int(interperet_code(c1, c2, gray), 2)
+            if scans_gathered == 5: # returns the median of 5 scans for accuracy
+                video_capture.release()
+                cv2.destroyAllWindows()
+                return statistics.median(scans)
+
+            scans.append(int(interperet_code(c1, c2, gray), 2))
+            scans_gathered += 1
 
         cv2.imshow('Video', frame)
 
