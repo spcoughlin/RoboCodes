@@ -85,6 +85,9 @@ def code_scanner():
     cv2.destroyAllWindows()
 
 def main():
+    """
+    Managing files and CLI
+    """
     code = code_scanner()
     print(f'Code Found: {code}')
 
