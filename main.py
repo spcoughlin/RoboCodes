@@ -16,11 +16,13 @@ def interperet_code(c1, c2, gray):
     row1 = [x_diff * 0.25, x_diff * 0.5, x_diff * 0.75, x_diff]
     row2 = [0, x_diff * 0.25, x_diff * 0.5, x_diff * 0.75]
 
+    dark_level = 60  # lower this if white cells are being interpreted as black
+
     bin_str = ""
     for i in row1:
         x = c1[0] + int(i)
         y = c1[1]
-        if np.any(gray[y, x] < 128):
+        if np.any(gray[y, x] < dark_level):
             bin_str += "1"
         else:
             bin_str += "0"
@@ -28,7 +30,7 @@ def interperet_code(c1, c2, gray):
     for i in row2:
         x = c1[0] + int(i)
         y = c2[1]
-        if np.any(gray[y, x] < 128):
+        if np.any(gray[y, x] < dark_level):
             bin_str += "1"
         else:
             bin_str += "0"
@@ -53,15 +55,13 @@ def code_scanner():
 
         cats = catCascade.detectMultiScale(
             gray,
-            scaleFactor=1.015,  # should be 1.01
+            scaleFactor=1.005,  # should be 1.01
             minNeighbors=5,  # should be 4
         )
 
         for (x, y, w, h) in cats:
             cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
-        scans_gathered = 0
-        scans = []
         if len(cats) >= 2:
             x, y, w, h = cats[0]
             c1 = [int((2 * x + w) / 2), int((2 * y + h) / 2)]
@@ -74,7 +74,7 @@ def code_scanner():
             elif c1[0] > c2[0]:
                 c1, c2 = c2, c1
 
-            if int(interperet_code(c1, c2, gray), 2) < 128: # arbitrary number, I just know my codes dont go past 128
+            if int(interperet_code(c1, c2, gray), 2) < 128:  # arbitrary number, I just know my codes dont go past 128
                 video_capture.release()
                 cv2.destroyAllWindows()
                 return int(interperet_code(c1, c2, gray), 2)
