@@ -5,6 +5,7 @@ import statistics
 
 catCascade = cv2.CascadeClassifier('cascade.xml')
 
+
 def interperet_code(c1, c2, gray):
     """
     Calculates the positions of all cells
@@ -52,42 +53,40 @@ def code_scanner():
 
         cats = catCascade.detectMultiScale(
             gray,
-            scaleFactor=1.015, # should be 1.01
-            minNeighbors=5, # should be 4
+            scaleFactor=1.015,  # should be 1.01
+            minNeighbors=5,  # should be 4
         )
 
         for (x, y, w, h) in cats:
-            cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
         scans_gathered = 0
         scans = []
         if len(cats) >= 2:
             x, y, w, h = cats[0]
-            c1 = [int((2 * x + w)/2), int((2 * y + h)/2)]
+            c1 = [int((2 * x + w) / 2), int((2 * y + h) / 2)]
 
             x, y, w, h = cats[1]
-            c2 = [int((2 * x + w)/2), int((2 * y + h)/2)]
+            c2 = [int((2 * x + w) / 2), int((2 * y + h) / 2)]
 
-            if c1[0] < c2[0]: # making sure c1 is the one on the left
+            if c1[0] < c2[0]:  # making sure c1 is the one on the left
                 pass
             elif c1[0] > c2[0]:
                 c1, c2 = c2, c1
 
-            if scans_gathered == 5: # returns the median of 5 scans for accuracy
+            if int(interperet_code(c1, c2, gray), 2) < 128: # arbitrary number, I just know my codes dont go past 128
                 video_capture.release()
                 cv2.destroyAllWindows()
-                return statistics.median(scans)
-
-            scans.append(int(interperet_code(c1, c2, gray), 2))
-            scans_gathered += 1
+                return int(interperet_code(c1, c2, gray), 2)
 
         cv2.imshow('Video', frame)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord('q'):  # so you can still close the window if it doesnt find anything
             break
 
     video_capture.release()
     cv2.destroyAllWindows()
+
 
 def main():
     """
@@ -134,7 +133,7 @@ def main():
                 logs = logs[::-1]
                 f.close()
 
-            past = datetime.datetime.now() # failsafe
+            past = datetime.datetime.now()  # failsafe
             with open(f'HoursFiles/hoursfile{code}.txt', 'r') as f:
                 lines = f.readlines()
 
@@ -145,7 +144,7 @@ def main():
                         break
 
                 time_to_add = (now - past).total_seconds()
-                time_to_add = time_to_add / 3600 # converting to hours
+                time_to_add = time_to_add / 3600  # converting to hours
                 hours = float(lines[1][:len(lines[1]) - 1])
                 hours += time_to_add
                 lines[1] = str(hours) + "\n"
@@ -180,7 +179,7 @@ def main():
                 lines[0] = name + "\n"
                 lines[1] = "0" + "\n"
                 lines[2] = "0"
-                with open(f'HoursFiles/hoursfile{code}.txt', 'w') as f:    
+                with open(f'HoursFiles/hoursfile{code}.txt', 'w') as f:
                     f.writelines(lines)
                     f.close()
                 f.close()
@@ -192,7 +191,7 @@ def main():
 
     clin = input("\nWould you like to run the program again?\n1 - Yes (Suggested)\n2 - No (Quit)\n")
     if clin == "1": main()
-    if clin == "2": pass 
+    if clin == "2": pass
 
 
 if __name__ == "__main__":
